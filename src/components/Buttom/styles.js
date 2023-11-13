@@ -16,8 +16,25 @@ export const Container = styled.div`
 
 `
 
-export const IconArea = styled.div``
+export const IconArea = styled.div`
+    height: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-right: 1px solid rgba(255,255,255, .2);
+    padding: 0 15px;
+`
 
-export const Icon = styled.img``
+export const Icon = styled.img`
+    height: 20px;
+`
 
-export const Label = styled.div``
+export const Label = styled.div`
+    height: inherit;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    padding: 0 20px;
+`
