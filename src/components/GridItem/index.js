@@ -8,10 +8,10 @@ export const GridItem = ({item, onClick}) => {
             {/* Caso o item esteja com o shown ou o permanent false, ira mostrar o icone padrao,
                 se não ira mostrar o item real virado.    
             */}
-            {!item.permanentShown && !item.shown &&
+            {(!item.permanentShown && !item.shown) &&
                 <C.Icon src={b7Svg} alt="" opacity={.1}/>
             }
-            {item.permanentShown || item.shown &&
+            {(item.permanentShown || item.shown) &&
                 <C.Icon src={items[item.item].icon} alt={items[item.item].name} />
             }
         </C.Container>

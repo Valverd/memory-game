@@ -21,15 +21,58 @@ const App = () => {
 
   useEffect(() => resetAndCreateGrid(), [])
 
+  //criado o timer para quando inicia o jogo, no caso quando entra no site.
   useEffect(() => {
     const timer = setInterval(() => {
-      if(playing) setTimeElapsed(timeElapsed + 1)
+      if (playing) setTimeElapsed(timeElapsed + 1)
     }, 1000);
 
     return () => clearInterval(timer)
 
   }, [playing, timeElapsed])
-  
+
+  //criando uma função para verificar se os items são iguais
+  useEffect(() => {
+    if (shownCount === 2) {
+      let opened = gridItems.filter(item => item.shown === true)
+
+      if (opened.length === 2) {
+        if (opened[0].item === opened[1].item) {
+          let tempGrid = [...gridItems]
+          tempGrid.forEach((item) => {
+            if (item.shown) {
+              item.permanentShown = true
+              item.shown = false
+            }
+          })
+          setGridItems(tempGrid)
+          setShownCount(0)
+          setMoveCount(moveCount + 1)
+        } 
+        else {
+          let tempGrid = [...gridItems]
+          tempGrid.forEach((item) => {
+            if(item.shown){
+              setTimeout(() => {
+                item.shown = false
+              }, 300)
+            }
+          })
+          setGridItems(tempGrid)
+          setShownCount(0)
+          setMoveCount(moveCount + 1)
+        }
+      }
+    }
+
+  }, [shownCount, gridItems])
+
+  useEffect(() => {
+    if(moveCount > 0 && gridItems.every(item => item.permanentShown === true)) {
+      setPlaying(false)
+    }
+  }, [moveCount, gridItems])
+
 
   const resetAndCreateGrid = () => {
     //passo 1 - resetar o jogo
@@ -40,7 +83,7 @@ const App = () => {
 
     //passo 2 - criar o grid
     let tempGrid = []
-    for(let i = 0; i < (items.length * 2); i++) {
+    for (let i = 0; i < (items.length * 2); i++) {
       tempGrid.push({
         item: null,
         shown: false,
@@ -50,10 +93,10 @@ const App = () => {
 
 
     //criando laço for 2 vezes para repetir de forma aleatória os números de 1 a 6, 2 vezes
-    for(let i = 0; i < 2; i++){
+    for (let i = 0; i < 2; i++) {
       for (let w = 0; w < items.length; w++) {
         let position = -1
-        while(position < 0 || tempGrid[position].item !== null) {
+        while (position < 0 || tempGrid[position].item !== null) {
           position = Math.floor(Math.random() * (items.length * 2))
         }
         tempGrid[position].item = w
@@ -66,7 +109,14 @@ const App = () => {
   }
 
   const handleItemClick = (i) => {
-
+    if (playing && i !== null && shownCount < 2) {
+      let tempGrid = [...gridItems]
+      if (tempGrid[i].permanentShown === false && tempGrid[i].shown === false) {
+        tempGrid[i].shown = true
+        setShownCount(shownCount + 1)
+      }
+      setGridItems(tempGrid)
+    }
   }
 
   return (
@@ -78,22 +128,22 @@ const App = () => {
         </C.LogoLink>
         <C.InfoArea>
           <InfoItem label={'Tempo'} value={formatTimeElapsed(timeElapsed)} />
-          <InfoItem label={'Movimentos'} value={'0'} />
+          <InfoItem label={'Movimentos'} value={moveCount} />
         </C.InfoArea>
 
-      <Buttom label="Reiniciar" icon={RestartIcon} onClick={resetAndCreateGrid}/>
+        <Buttom label="Reiniciar" icon={RestartIcon} onClick={resetAndCreateGrid} />
       </C.Info>
 
 
       <C.GridArea>
         <C.Grid>
           {gridItems.map((item, i) => {
-            {console.log(item)}
-            return(
-              <GridItem 
+            { console.log(item) }
+            return (
+              <GridItem
                 key={i}
                 item={item}
-                onClick={() => {handleItemClick(i)}}
+                onClick={() => { handleItemClick(i) }}
               />
             )
           })}
