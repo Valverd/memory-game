@@ -4,6 +4,7 @@ Projeto desenvolvido durante o curso B7Web.
 
 <img src="./src/assets/MemoryGame.png">
 
+
 ## Available Scripts
 
 In the project directory, you can run:
